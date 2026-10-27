@@ -102,9 +102,9 @@ import { getInventory, addShoppingItem } from "./storage.js";
 
 ## Current status
 
-**Working now:** navigation between all three pages, sample data, inventory search + location filters, low-stock badges, shopping checkboxes (saved), low-stock suggestions, recipe search, ingredient availability count.
+**Working now:** navigation between all three pages, sample data, inventory search, low-stock badges, shopping checkboxes (saved), low-stock suggestions, recipe search, ingredient availability count.
 
 **To build:**
-- Dev 1 — add / edit / delete inventory items, expiration warnings
+- Dev 1 — add / edit / delete inventory items, location filters, expiration warnings
 - Dev 2 — add / remove shopping items, add suggestions to list, move purchased items to inventory
 - Dev 3 — recipe detail view, missing-ingredient list, add missing ingredients to shopping list

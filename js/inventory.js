@@ -1,27 +1,23 @@
-// Inventory page — owned by Developer 1.
-import { initStorage, getInventory, isLowStock, LOCATIONS } from "./storage.js";
+// Inventory (home) page — owned by Developer 1.
+import { initStorage, getInventory, isLowStock } from "./storage.js";
 import { renderNav } from "./navigation.js";
 import { escapeHtml, showToast } from "./ui.js";
 
 const listEl = document.getElementById("inventory-list");
 const searchEl = document.getElementById("inventory-search");
-const filtersEl = document.getElementById("location-filters");
 
-let activeLocation = "All";
-
-function renderFilters() {
-  filtersEl.innerHTML = ["All", ...LOCATIONS]
-    .map((loc) => `<button type="button" class="chip" data-location="${loc}" aria-pressed="${loc === activeLocation}">${loc}</button>`)
-    .join("");
-}
+// One icon per storage location, so the icon next to each item means something.
+const LOCATION_ICONS = {
+  Refrigerator: '<rect x="6" y="3" width="12" height="18" rx="2"/><path d="M6 10h12M9 6v2M9 13v3"/>',
+  Freezer: '<path d="M12 3v18M4.5 7.5l15 9M19.5 7.5l-15 9"/>',
+  Pantry: '<rect x="5" y="7" width="14" height="14" rx="2"/><path d="M8 3h8v4H8z"/>',
+  Cupboard: '<rect x="4" y="4" width="16" height="16" rx="2"/><path d="M12 4v16M9.5 11v2M14.5 11v2"/>',
+  Other: '<circle cx="12" cy="12" r="8"/>',
+};
 
 function renderList() {
   const query = searchEl.value.trim().toLowerCase();
-  const items = getInventory().filter(
-    (item) =>
-      (activeLocation === "All" || item.location === activeLocation) &&
-      item.name.toLowerCase().includes(query)
-  );
+  const items = getInventory().filter((item) => item.name.toLowerCase().includes(query));
 
   if (items.length === 0) {
     listEl.innerHTML = `<li class="empty-state">No items found.</li>`;
@@ -31,28 +27,22 @@ function renderList() {
   listEl.innerHTML = items
     .map(
       (item) => `
-      <li class="card inventory-card">
-        <div>
-          <p class="card-title">${escapeHtml(item.name)}</p>
-          <p class="text-muted">${escapeHtml(item.location)}${item.expirationDate ? ` · Expires ${item.expirationDate}` : ""}</p>
+      <li class="inventory-row">
+        <svg class="inventory-icon" viewBox="0 0 24 24" role="img" aria-label="${escapeHtml(item.location)}">
+          ${LOCATION_ICONS[item.location] ?? LOCATION_ICONS.Other}
+        </svg>
+        <div class="inventory-info">
+          <span class="inventory-name">${escapeHtml(item.name)}</span>
+          <span class="text-muted">${escapeHtml(item.location)}${item.isShared ? "" : " · Personal"}</span>
         </div>
-        <div class="inventory-meta">
-          <span class="inventory-qty">${item.quantity} ${escapeHtml(item.unit)}</span>
-          ${isLowStock(item) ? `<span class="badge badge-warning">Low stock</span>` : ""}
-          ${item.isShared ? "" : `<span class="badge">Personal</span>`}
+        <div class="inventory-qty">
+          <span>${item.quantity} ${escapeHtml(item.unit)}</span>
+          ${isLowStock(item) ? `<span class="badge badge-warning">Low</span>` : ""}
         </div>
       </li>`
     )
     .join("");
 }
-
-filtersEl.addEventListener("click", (e) => {
-  const chip = e.target.closest(".chip");
-  if (!chip) return;
-  activeLocation = chip.dataset.location;
-  renderFilters();
-  renderList();
-});
 
 searchEl.addEventListener("input", renderList);
 
@@ -63,5 +53,4 @@ document.getElementById("add-item-btn").addEventListener("click", () => {
 
 initStorage();
 renderNav();
-renderFilters();
 renderList();

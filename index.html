@@ -14,12 +14,13 @@
       <button id="add-item-btn" class="btn btn-primary btn-small" type="button">+ Add Item</button>
     </header>
 
-    <label for="inventory-search" class="visually-hidden">Search inventory</label>
-    <input id="inventory-search" class="input" type="search" placeholder="Search items…">
+    <label for="inventory-search" class="visually-hidden">Search your kitchen</label>
+    <input id="inventory-search" class="input" type="search" placeholder="Search your kitchen…">
 
-    <div id="location-filters" class="chip-row" role="group" aria-label="Filter by storage location"></div>
-
-    <ul id="inventory-list" class="card-list"></ul>
+    <section class="section" aria-labelledby="kitchen-heading">
+      <h2 id="kitchen-heading">Your Kitchen</h2>
+      <ul id="inventory-list" class="card inventory-list"></ul>
+    </section>
   </main>
 
   <nav id="bottom-nav"></nav>
