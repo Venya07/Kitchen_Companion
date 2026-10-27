@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Shopping List · Kitchen Companion</title>
+  <link rel="stylesheet" href="../css/global.css">
+  <link rel="stylesheet" href="../css/shopping.css">
+</head>
+<body data-page="shopping" data-root="..">
+  <main class="app">
+    <header class="page-header">
+      <h1>Shopping List</h1>
+      <button id="add-item-btn" class="btn btn-primary btn-small" type="button">+ Add Item</button>
+    </header>
+
+    <ul id="shopping-list" class="card-list"></ul>
+
+    <section class="section" aria-labelledby="suggested-heading">
+      <h2 id="suggested-heading">Suggested Items</h2>
+      <p class="text-muted">Running low in your kitchen</p>
+      <ul id="suggested-list" class="card-list"></ul>
+    </section>
+  </main>
+
+  <nav id="bottom-nav"></nav>
+
+  <script type="module" src="../js/shopping.js"></script>
+</body>
+</html>

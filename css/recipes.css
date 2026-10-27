@@ -1,0 +1,16 @@
+/* Recipes page styles — owned by Developer 3. */
+
+.recipe-list {
+  margin-top: var(--space-4);
+}
+
+.recipe-list p {
+  margin: 0 0 var(--space-1);
+}
+
+.recipe-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: var(--space-2);
+}

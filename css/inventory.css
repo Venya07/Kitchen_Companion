@@ -1,0 +1,22 @@
+/* Inventory page styles — owned by Developer 1. */
+
+.inventory-card {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.inventory-card p {
+  margin: 0;
+}
+
+.inventory-meta {
+  display: grid;
+  justify-items: end;
+  gap: var(--space-1);
+}
+
+.inventory-qty {
+  font-weight: 600;
+}

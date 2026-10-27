@@ -1,0 +1,30 @@
+/* Shopping page styles — owned by Developer 2. */
+
+.shopping-card {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.shopping-check {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  cursor: pointer;
+}
+
+.shopping-check input {
+  width: 22px;
+  height: 22px;
+  accent-color: var(--color-primary);
+}
+
+.shopping-name {
+  font-weight: 600;
+}
+
+.shopping-card.purchased .shopping-name {
+  text-decoration: line-through;
+  color: var(--color-text-muted);
+}
