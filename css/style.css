@@ -280,6 +280,9 @@ body.page {
 .keyboard { display: none; flex: none; background: #D3D7D5; user-select: none; }
 .keyboard img { display: block; width: 640px; pointer-events: none; }
 .keyboard.is-open { display: block; }
+.keyboard .kb-text { height: 288px; }
+.keyboard .kb-num { height: 282px; }
+.keyboard.is-text .kb-num, .keyboard.is-numeric .kb-text { display: none; }
 .kb-open .bottomnav, .kb-open .fab-slot { display: none; }
 
 /* ---------------- Text ---------------- */
@@ -924,3 +927,5 @@ details.why ul { margin: 0; padding-left: 22px; }
 
 .member-row { display: flex; align-items: flex-start; gap: var(--sp-2); padding: var(--sp-2) 20px; }
 .member-row + .member-row { border-top: 1px solid var(--border); }
+.card.row { background: var(--surface); }
+.card.row:hover { background: var(--background); }

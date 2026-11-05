@@ -213,7 +213,6 @@
 
   function showKeyboard(field) {
     var numeric = field.getAttribute("type") === "number";
-    el.kbImg.src = numeric ? "assets/keypad.svg" : "assets/keyboard.svg";
     el.keyboard.className = "keyboard is-open " + (numeric ? "is-numeric" : "is-text");
     el.screen.classList.add("kb-open");
     // Content has shrunk; keep the focused field visible above the keyboard.
@@ -274,7 +273,7 @@
   /* ---------------- Init ---------------- */
 
   function init() {
-    ["screen", "device", "scaler", "appbar", "main", "view", "fabSlot", "keyboard", "kbImg", "nav", "toastLayer", "dialogLayer", "clock"]
+    ["screen", "device", "scaler", "appbar", "main", "view", "fabSlot", "keyboard", "nav", "toastLayer", "dialogLayer", "clock"]
       .forEach(function (k) { el[k] = document.getElementById(k.replace(/[A-Z]/g, function (c) { return "-" + c.toLowerCase(); })); });
 
     el.nav.innerHTML = TABS.map(function (t) {
