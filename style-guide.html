@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Kitchen Companion · Style Guide</title>
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    /* Page layout for the guide only; components below use the app's own classes. */
+    body.guide { background: var(--background); color: var(--text); font-family: var(--font); font-size: var(--fs-body); line-height: var(--lh); margin: 0; }
+    .guide-wrap { max-width: 1040px; margin: 0 auto; padding: 32px 24px 64px; }
+    .guide h1 { font-size: 36px; margin: 0 0 4px; }
+    .guide h2.g { font-size: var(--fs-title); margin: 48px 0 16px; padding-bottom: 8px; border-bottom: 2px solid var(--border); }
+    .guide h3 { font-size: var(--fs-heading); margin: 24px 0 12px; }
+    .swatches { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 16px; }
+    .swatch { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; }
+    .swatch-chip { height: 96px; display: flex; align-items: flex-end; padding: 10px 14px; font-weight: 700; font-size: var(--fs-secondary); }
+    .swatch-info { padding: 12px 14px; font-size: var(--fs-small); }
+    .swatch-info code { font-size: var(--fs-small); }
+    .type-row { display: grid; grid-template-columns: 260px 1fr; gap: 16px; align-items: baseline; padding: 12px 0; border-bottom: 1px solid var(--border); }
+    .type-row .muted { font-size: var(--fs-small); }
+    .icons { display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 12px; }
+    .icon-cell { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 16px 8px; text-align: center; font-size: var(--fs-small); }
+    .icon-cell .icon { width: 36px; height: 36px; display: block; margin: 0 auto 8px; }
+    .demo-row { display: flex; flex-wrap: wrap; gap: 16px; align-items: center; margin-bottom: 16px; }
+    .demo-box { width: 640px; max-width: 100%; }
+    .demo-frame { position: relative; width: 640px; max-width: 100%; height: 300px; border-radius: var(--radius); overflow: hidden; background: var(--background); border: 1px solid var(--border); }
+    .demo-frame .overlay { position: absolute; }
+    .demo-frame .toast-layer { position: absolute; }
+    .demo-nav { width: 640px; max-width: 100%; border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; }
+    .spec { font-size: var(--fs-small); color: var(--text-muted); margin: 4px 0 16px; }
+  </style>
+</head>
+<body class="guide">
+<div class="guide-wrap" id="guide"></div>
+<script src="js/icons.js"></script>
+<script>
+(function () {
+  "use strict";
+  var icon = KC.icon;
+  var colors = [
+    ["--text", "#1B2420", "Primary text", "15.9:1 on white · 14.6:1 on background", "#fff"],
+    ["--text-muted", "#4A5651", "Secondary text, input borders", "7.7:1 on white · 7.0:1 on background", "#fff"],
+    ["--background", "#F4F6F2", "App background", "--text on it 14.6:1", "#1B2420"],
+    ["--surface", "#FFFFFF", "Cards, bars, inputs", "--text on it 15.9:1", "#1B2420"],
+    ["--border", "#C9D1CB", "Dividers only (decorative)", "1.6:1 — never the only edge of a control", "#1B2420"],
+    ["--primary", "#1E6B47", "Primary buttons, selected states", "white on it 6.5:1 · as text on white 6.5:1", "#fff"],
+    ["--primary-dark", "#154D33", "Hover, selected chips", "white on it 9.8:1", "#fff"],
+    ["--primary-tint", "#E3F1E8", "OK badges, highlights", "--primary-dark on it 8.4:1", "#154D33"],
+    ["--warning-text", "#8A4300", "Warning text", "on --warning-bg 6.5:1", "#fff"],
+    ["--warning-bg", "#FFF1DC", "Warning badges/banners", "--warning-text on it 6.5:1", "#8A4300"],
+    ["--danger-text", "#A32117", "Error/expired text", "on --danger-bg 6.6:1", "#fff"],
+    ["--danger-bg", "#FDECEA", "Expired badges, errors", "--danger-text on it 6.6:1", "#A32117"],
+    ["--danger", "#B42318", "Destructive buttons", "white on it 6.6:1", "#fff"],
+    ["--info-text", "#1E4FB8", "Info text, owner tags, focus ring", "on --info-bg 6.3:1", "#fff"],
+    ["--info-bg", "#E7EEFC", "Info notes and banners", "--info-text on it 6.3:1", "#1E4FB8"]
+  ];
+  var type = [
+    ["Big number", "32px · Bold 700", "var(--fs-big)", 700, "4 items left to buy"],
+    ["Screen title", "28px · Bold 700", "var(--fs-title)", 700, "Kitchen"],
+    ["Section heading", "24px · Bold 700", "var(--fs-heading)", 700, "Ingredients"],
+    ["Body", "20px · Regular 400 / Semibold 600", "var(--fs-body)", 400, "Milk · 750 mL left"],
+    ["Secondary", "17px · Regular 400", "var(--fs-secondary)", 400, "Fridge · Added Nov 1"],
+    ["Small / labels (minimum)", "16px · Semibold 600", "var(--fs-small)", 600, "Expires in 2 days"]
+  ];
+
+  var html = "";
+  html += '<h1>Kitchen Companion — Style Guide</h1><p class="muted">Phase 2.1 medium-fidelity prototype · 640 × 960 CSS px device (8.3″ diagonal) · All values from <code>css/style.css</code></p>';
+
+  html += '<h2 class="g">Color tokens</h2><p class="spec">All text pairs meet WCAG 2.1 AA (4.5:1) or better. Ratios computed with the WCAG relative-luminance formula. Status is never shown by color alone — every badge pairs an icon with text.</p><div class="swatches">';
+  colors.forEach(function (c) {
+    html += '<div class="swatch"><div class="swatch-chip" style="background:' + c[1] + ";color:" + c[4] + (c[1] === "#FFFFFF" ? ";border-bottom:1px solid var(--border)" : "") + '">' + c[2] + '</div>' +
+      '<div class="swatch-info"><strong><code>' + c[0] + "</code></strong><br><code>" + c[1] + "</code><br>" + c[3] + "</div></div>";
+  });
+  html += "</div>";
+
+  html += '<h2 class="g">Typography</h2><p class="spec">Font family: <strong>"Segoe UI"</strong> (Windows), <strong>-apple-system / San Francisco</strong> (macOS), <strong>Roboto</strong> (Android/ChromeOS), <strong>Arial</strong>, sans-serif. System fonts only — nothing is downloaded. Line height 1.4. Nothing in the app is smaller than 16px.</p>';
+  type.forEach(function (t) {
+    html += '<div class="type-row"><div><strong>' + t[0] + '</strong><div class="muted">' + t[1] + '</div></div><div style="font-size:' + t[2] + ";font-weight:" + t[3] + ';line-height:1.3">' + t[4] + "</div></div>";
+  });
+
+  html += '<h2 class="g">Spacing &amp; touch targets</h2><p>Spacing scale: 8 / 16 / 24 px. Screen padding 24px; gaps between cards 16px. Every control is at least <strong>56px tall</strong> with at least 8px between targets. Bottom navigation 72px. Corner radius 14px (cards), 10px (controls).</p>';
+
+  html += '<h2 class="g">Icons</h2><p class="spec">One hand-drawn line set: 24 × 24 grid, 2px stroke, round caps and joins, <code>currentColor</code>. Defined once as an inline SVG sprite (<code>js/icons.js</code>). Every icon button also has a visible text label or an aria-label.</p><div class="icons">';
+  KC.ICON_NAMES.forEach(function (n) { html += '<div class="icon-cell">' + icon(n) + "<code>" + n + "</code></div>"; });
+  html += "</div>";
+
+  html += '<h2 class="g">Components</h2>';
+  html += '<h3>Buttons</h3><div class="demo-row">' +
+    '<button class="btn btn-primary">' + icon("utensils") + 'Primary</button>' +
+    '<button class="btn btn-secondary">' + icon("edit") + 'Secondary</button>' +
+    '<button class="btn btn-tertiary">' + icon("plus") + 'Tertiary</button>' +
+    '<button class="btn btn-danger">' + icon("reset") + 'Danger</button>' +
+    '<button class="btn btn-danger-outline">' + icon("trash") + 'Delete</button>' +
+    '<button class="btn btn-primary" disabled>Disabled</button>' +
+    '<button class="fab">' + icon("plus") + '<span>Add item</span></button>' +
+    '<button class="icon-btn" aria-label="More">' + icon("plus") + '</button></div>';
+
+  html += '<h3>Inputs</h3><div class="demo-box">' +
+    '<div class="search">' + icon("search") + '<input class="input" type="search" placeholder="Search your kitchen" aria-label="Search"></div>' +
+    '<div class="field"><label class="label" for="g1">Amount used</label><div class="qty-row"><input class="input" id="g1" type="number" value="250">' +
+    '<div class="select-wrap"><select class="select" aria-label="Unit"><option>mL</option><option>L</option></select>' + icon("chevron-down") + '</div></div>' +
+    '<div class="hint">Hint text explains the field.</div></div>' +
+    '<div class="field"><label class="label" for="g2">Name</label><input class="input has-error" id="g2" type="text" value="">' +
+    '<div class="field-error">' + icon("alert") + '<span>Enter a name for this item.</span></div></div>' +
+    '<div class="field"><span class="label">Segmented control</span><div class="seg"><button class="seg-btn is-on" aria-pressed="true">Shared</button><button class="seg-btn" aria-pressed="false">Me</button><button class="seg-btn" aria-pressed="false">Jordan</button></div></div>' +
+    '<div class="check-line"><button class="check" role="checkbox" aria-checked="true" aria-label="No expiration"><span class="check-box">' + icon("check") + '</span></button><span>Checkbox (56px target)</span></div>' +
+    '<div class="radio-list" style="margin-top:8px"><button class="radio" role="radio" aria-checked="true"><span class="radio-dot"></span><span class="radio-text"><strong>Keep as a new batch</strong>With its own expiration date</span></button>' +
+    '<button class="radio" role="radio" aria-checked="false"><span class="radio-dot"></span><span class="radio-text"><strong>Add to existing batch</strong>250 mL · Fridge · expires Nov 5</span></button></div>' +
+    '<div class="card card-pad" style="margin-top:16px;display:flex;justify-content:space-between;align-items:center"><span class="label" style="margin:0">Stepper</span><div class="stepper"><button class="icon-btn" aria-label="Fewer">' + icon("minus") + '</button><div class="stepper-value"><span class="big-number">4</span><span class="secondary">servings</span></div><button class="icon-btn" aria-label="More">' + icon("plus") + '</button></div></div>' +
+    "</div>";
+
+  html += '<h3>Chips</h3><div class="demo-row"><button class="chip" aria-pressed="true">All</button><button class="chip" aria-pressed="false">' + icon("fridge") + 'Fridge</button><button class="chip" aria-pressed="false">' + icon("heart") + 'Favorites</button><button class="chip" aria-pressed="false">¼ of batch</button></div>';
+
+  html += '<h3>Badges &amp; tags</h3><div class="demo-row">' +
+    '<span class="badge badge-danger">' + icon("x-circle") + 'Expired yesterday</span>' +
+    '<span class="badge badge-warning">' + icon("alert") + 'Expires in 2 days</span>' +
+    '<span class="badge badge-neutral">' + icon("clock") + 'Expires Nov 20</span>' +
+    '<span class="badge badge-ok">' + icon("check") + 'Have enough</span>' +
+    '<span class="badge badge-warning">' + icon("alert") + 'Short 50 g</span>' +
+    '<span class="badge badge-danger">' + icon("x-circle") + 'Missing</span>' +
+    '<span class="badge badge-info">' + icon("info") + 'Info</span>' +
+    '<span class="tag tag-owner">' + icon("user") + "Jordan's</span>" +
+    '<span class="tag tag-source">Added by you</span></div>';
+
+  html += '<h3>Banners &amp; notes</h3><div class="demo-box">' +
+    '<button class="banner banner-danger">' + icon("alert") + '<span class="banner-main"><strong>2 expired · 3 expiring soon</strong><span class="banner-sub">Tap to review food that needs attention</span></span>' + icon("chevron-right") + '</button>' +
+    '<button class="banner banner-info">' + icon("restock") + '<span class="banner-main"><strong>2 restock suggestions</strong><span class="banner-sub">Milk, Flour are below your alert level</span></span>' + icon("chevron-right") + '</button>' +
+    '<div class="note note-info" style="margin-bottom:8px">' + icon("info") + '<span>Milk is already on your list (1 L) — will update to 1.75 L.</span></div>' +
+    '<div class="preview">Remaining: 1.64 L (was 1.89 L)</div></div>';
+
+  html += '<h3>Cards &amp; list rows</h3><div class="demo-box"><ul class="list card">' +
+    '<li><button class="row"><span class="row-icon">' + icon("fridge") + '</span><span class="row-main"><span class="row-title">Greek Yogurt<span class="tag tag-owner">' + icon("user") + "Jordan's</span></span><span class=\"row-sub\">Fridge</span></span><span class=\"row-end\"><span class=\"row-qty\">500 g</span><span class=\"badge badge-warning\">" + icon("alert") + 'Expires in 2 days</span></span></button></li>' +
+    '<li class="shop-row"><button class="check" role="checkbox" aria-checked="false" aria-label="Check off Bananas"><span class="check-box">' + icon("check") + '</span></button><button class="row"><span class="row-main"><span class="row-title">Bananas</span><span class="row-sub">6 each · Slightly green</span></span><span class="row-end"><span class="tag tag-source">Added by you</span></span><span class="row-chev">' + icon("chevron-right") + '</span></button></li>' +
+    '</ul><div class="recipe-grid" style="margin-top:16px"><article class="card recipe-card"><div class="recipe-band"></div><button class="recipe-open"><span class="recipe-name">Fluffy Pancakes</span><span class="recipe-meta"><span>' + icon("clock") + '25 min</span><span>' + icon("plate") + '4 servings</span></span><span class="badge badge-warning">' + icon("alert") + 'Have 4 of 6 ingredients</span></button><button class="recipe-fav" aria-pressed="true">' + icon("heart-fill") + 'Saved</button></article>' +
+    '<article class="card recipe-card"><div class="recipe-band"></div><button class="recipe-open"><span class="recipe-name">Chicken &amp; Pepper Stir-Fry</span><span class="recipe-meta"><span>' + icon("clock") + '30 min</span><span>' + icon("plate") + '4 servings</span></span><span class="badge badge-ok">' + icon("check-circle") + 'Have all 6 ingredients</span></button><button class="recipe-fav" aria-pressed="false">' + icon("heart") + 'Save</button></article></div></div>';
+
+  html += '<h3>Toast (with Undo)</h3><div class="demo-frame"><div class="toast-layer"><div class="toast"><span class="toast-msg">Used 250 mL Milk · 750 mL left</span><button class="toast-undo">' + icon("undo") + 'Undo</button></div></div></div>';
+
+  html += '<h3>Dialog</h3><div class="demo-frame" style="height:340px"><div class="overlay"><div class="dialog"><h2 class="dialog-title">Under development</h2><div class="dialog-body"><p>Sharing the list isn’t available in this prototype yet.</p></div><div class="dialog-actions"><button class="btn btn-primary">Close</button></div></div></div></div>';
+
+  html += '<h3>Top app bar &amp; bottom navigation</h3><div class="demo-nav">' +
+    '<div class="appbar"><button class="appbar-back" aria-label="Back">' + icon("arrow-left") + '</button><h1 class="appbar-title">Item details</h1></div>' +
+    '<div class="appbar"><h1 class="appbar-title is-root">Kitchen</h1><div class="appbar-actions"><button class="appbar-btn">' + icon("users") + '<span>Household</span></button></div></div>' +
+    '<div style="height:24px;background:var(--background)"></div>' +
+    '<nav class="bottomnav"><button class="nav-tab is-active" aria-current="page"><span class="nav-ind">' + icon("kitchen") + '</span><span class="nav-label">Kitchen</span></button>' +
+    '<button class="nav-tab"><span class="nav-ind">' + icon("cart") + '</span><span class="nav-label">Shopping</span></button>' +
+    '<button class="nav-tab"><span class="nav-ind">' + icon("book") + '</span><span class="nav-label">Recipes</span></button></nav></div>' +
+    '<p class="spec">Selected tab: filled primary indicator + white icon + bold primary label. 72px tall, 3 tabs. Household lives in the top app bar.</p>';
+
+  html += '<h3>Soft keyboard images</h3><div class="demo-row"><img src="assets/keyboard.svg" alt="Text keyboard image" width="400"><img src="assets/keypad.svg" alt="Numeric keypad image" width="400"></div>';
+
+  document.getElementById("guide").innerHTML = html;
+})();
+</script>
+</body>
+</html>
