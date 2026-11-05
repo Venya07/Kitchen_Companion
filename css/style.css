@@ -918,3 +918,9 @@ details.why summary::-webkit-details-marker { display: none; }
 details.why[open] summary .icon-chev { transform: rotate(180deg); }
 details.why .why-body { padding: 0 var(--sp-2) var(--sp-2); font-size: var(--fs-secondary); }
 details.why ul { margin: 0; padding-left: 22px; }
+.recipe-grid .card + .card, .btn-row .card + .card { margin-top: 0; }
+
+/* ---------------- Household ---------------- */
+
+.member-row { display: flex; align-items: flex-start; gap: var(--sp-2); padding: var(--sp-2) 20px; }
+.member-row + .member-row { border-top: 1px solid var(--border); }
