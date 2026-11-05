@@ -481,8 +481,11 @@
     var have = usableAmount(ingr.foodKey, ingr.unit);
     var otherUnits = usableBatches(ingr.foodKey).filter(function (b) { return !compatible(b.unit, ingr.unit); });
     var status = have >= need - 1e-9 ? "enough" : have > 0 ? "short" : "missing";
+    var short = Math.max(0, round6(need - have));
+    // You can't buy half an egg: round count shortages up to whole items.
+    if (unitFamily(ingr.unit) === "count" && short > 0) short = Math.ceil(convert(short, ingr.unit, "each") - 1e-9) / convert(1, ingr.unit, "each");
     return {
-      ing: ingr, need: need, unit: ingr.unit, have: have, short: Math.max(0, round6(need - have)), status: status,
+      ing: ingr, need: need, unit: ingr.unit, have: have, short: short, status: status,
       excluded: excludedBatches(ingr.foodKey), otherUnits: otherUnits
     };
   }
