@@ -1,12 +1,10 @@
-# Kitchen Companion — CMSC434 Phase 2 Project Setup
+# Kitchen Companion — Foundation Requirements
 
-You are helping initialize a collaborative web application called **Kitchen Companion**
+Kitchen Companion is a CMSC434 kitchen-management prototype for shared households, developed across inventory, shopping, and recipes.
 
-We have three developers collaborating through GitHub. We are creating a medium-fidelity, interactive mobile-style web application for managing household food inventory, shopping lists, and recipes.
+This document records the original Phase 2 foundation requirements. The Phase 2.1 prototype has since moved to a single-page app with plain scripts so it can open directly from disk. File names, ES-module requirements, design tokens, and viewport dimensions below describe the earlier foundation; see [README.md](../README.md) for the current structure, [style-guide.html](../style-guide.html) for the current visual design, and [TASKS.md](../TASKS.md) for the current task coverage and demo instructions.
 
-Your immediate task is to **initialize the complete project structure, shared design system, navigation, and reusable data infrastructure** so each developer can independently implement their assigned feature.
-
-Do not implement every feature completely yet. Create a polished, working foundation with starter pages and clearly defined integration points.
+The foundation scope covered shared navigation, styling, persistence, and starter screens, with feature development divided among three developers.
 
 ## 1. Technology Requirements
 
@@ -34,7 +32,7 @@ Use relative paths for all assets, scripts, stylesheets, and navigation links.
 
 The project should be runnable using a local development server such as VS Code Live Server, but it must not depend on a backend.
 
-## 2. Create This Folder Structure
+## 2. Original Folder Structure
 
 ```text
 kitchen-companion/
@@ -70,8 +68,6 @@ kitchen-companion/
 └── .gitignore
 ```
 
-If you identify additional shared files that would improve maintainability, you may create them, but explain their purpose.
-
 ## 3. Application Overview
 
 Kitchen Companion helps people who share kitchens manage their food and coordinate grocery shopping.
@@ -82,7 +78,7 @@ The application has three primary feature sets:
 
 Owned by Developer 1.
 
-Users will eventually be able to:
+Required user capabilities:
 - View all kitchen inventory.
 - Add food items.
 - Edit food items.
@@ -116,7 +112,7 @@ Measurement units:
 
 Owned by Developer 2.
 
-Users will eventually be able to:
+Required user capabilities:
 - View their shopping list.
 - Add grocery items.
 - Enter quantities and units.
@@ -129,7 +125,7 @@ Users will eventually be able to:
 
 Owned by Developer 3.
 
-Users will eventually be able to:
+Required user capabilities:
 - Browse recipes.
 - Search recipes.
 - View recipe ingredients.
@@ -142,11 +138,9 @@ All three feature sets must be able to share data.
 
 ## 4. Visual Design System
 
-Create a modern, realistic mobile application interface.
+The interface should be readable, consistent, and suitable for a mobile kitchen-management app.
 
-The app should resemble a polished consumer kitchen-management application rather than a basic student HTML project.
-
-Use these design tokens:
+Original design tokens:
 
 Primary green: #2E7D5B
 
@@ -176,7 +170,7 @@ Typography:
 - Secondary text: 14px
 - Navigation labels: 13px
 
-Create reusable CSS classes for:
+Shared CSS components:
 - Buttons
 - Cards
 - Forms
@@ -212,7 +206,7 @@ The application should open directly to Kitchen Inventory.
 
 ## 6. Shared Bottom Navigation
 
-Create a reusable navigation component with three tabs:
+The shared navigation has three tabs:
 
 1. Inventory
 2. Shopping
@@ -226,13 +220,11 @@ Each tab must have:
 
 The navigation should appear consistently across all three pages.
 
-Avoid duplicating navigation logic unnecessarily.
-
 Navigation links must work correctly from both the root directory and the pages directory.
 
 ## 7. Shared Data Model
 
-Create a reusable storage.js module that manages application data using localStorage.
+The original storage.js module centralizes application data in localStorage.
 
 Use a consistent inventory item structure:
 
@@ -288,7 +280,7 @@ Recipe structure:
 }
 ```
 
-Implement reusable functions for:
+Original shared data API:
 
 - getInventory()
 - saveInventory()
@@ -316,7 +308,7 @@ For recipe ingredient matching, document how measurement units and quantities wi
 
 ## 8. Starter Pages
 
-Create three functional starter pages.
+The foundation included three functional starter pages.
 
 ### Inventory — index.html
 
@@ -330,9 +322,9 @@ Include:
 - Low-stock indicators
 - Add Item button
 
-The layout should be realistic and visually polished.
+The layout should use the shared visual styles.
 
-Leave clear integration points for Developer 1 to implement full inventory management.
+Developer 1 owns the inventory integration points.
 
 ### Shopping — shopping.html
 
@@ -343,7 +335,7 @@ Include:
 - Add Item button
 - Suggested Items section
 
-Leave clear integration points for Developer 2.
+Developer 2 owns the shopping integration points.
 
 ### Recipes — recipes.html
 
@@ -355,31 +347,25 @@ Include:
 - Cooking times
 - Ingredient availability indicators
 
-Leave clear integration points for Developer 3.
+Developer 3 owns the recipe integration points.
 
 All pages must load without JavaScript errors.
 
 ## 9. Collaboration Requirements
 
-We are using GitHub with three feature branches:
+Original feature-branch plan:
 
 - feature/inventory
 - feature/shopping
 - feature/recipes
 
-The shared foundation will be committed to main before feature development begins.
-
-Organize the code so developers can work primarily within their assigned files.
+The collaboration plan places the shared foundation on main before feature development.
 
 Do not put all application logic in one JavaScript file.
 
 Keep shared functions in storage.js.
 
 Use ES modules with explicit imports and exports.
-
-Document which files each developer should edit.
-
-Avoid creating unnecessary dependencies between feature-specific JavaScript files.
 
 ## 10. Accessibility and Usability
 
@@ -395,50 +381,13 @@ Implement:
 
 The interface should prioritize clarity and usability.
 
-## 11. README Documentation
+## 11. Prototype Scope
 
-Create a README.md containing:
+The app runs offline without a backend, external dependencies, or authentication. Unfinished features must be visibly marked as unavailable rather than appearing functional.
 
-1. Project overview.
-2. Technology stack.
-3. Folder structure.
-4. Instructions for running locally.
-5. Team responsibilities.
-6. GitHub branching workflow.
-7. Shared data model.
-8. How to add new features.
-9. How to test offline.
-10. Current functionality versus planned functionality.
+## 12. Verification
 
-Include instructions for creating feature branches and opening pull requests.
-
-## 12. Implementation Scope
-
-For this initial setup:
-
-DO:
-- Create every required file.
-- Implement the shared CSS design system.
-- Implement working navigation.
-- Implement localStorage utilities.
-- Add realistic sample data.
-- Build visually polished starter screens.
-- Ensure all pages load correctly.
-- Document the project structure.
-
-DO NOT:
-- Fully implement all three feature sets.
-- Create a backend.
-- Add external dependencies.
-- Implement unnecessary authentication.
-- Build unrelated features.
-- Add nonfunctional buttons that appear to work without providing feedback.
-
-If a feature is not implemented yet, clearly mark it as a placeholder or disable its control.
-
-## 13. Final Verification
-
-After creating the project:
+Foundation verification checklist:
 
 1. Check that all required files exist.
 2. Verify that relative paths are correct.
@@ -449,23 +398,3 @@ After creating the project:
 7. Verify the mobile layout.
 8. Check for JavaScript errors.
 9. Confirm no network resources are required.
-
-If browser testing is unavailable, clearly identify what still requires manual testing rather than claiming it has been verified.
-
-## 14. Final Output
-
-When finished, provide:
-
-- A summary of files created.
-- An explanation of the architecture.
-- Instructions for running the application.
-- Which files each teammate owns.
-- Which functionality is already working.
-- Which functionality still needs implementation.
-- Any integration considerations for the three developers.
-
-Start by examining the existing repository.
-
-If files already exist, preserve working code and integrate with the existing structure rather than overwriting it.
-
-Then implement the shared project foundation.
