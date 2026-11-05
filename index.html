@@ -23,6 +23,21 @@
     </section>
   </main>
 
+  <dialog id="edit-dialog" class="modal" aria-labelledby="edit-title">
+    <form id="edit-form" novalidate>
+      <h2 id="edit-title">Edit item</h2>
+      <div class="form-field">
+        <label for="edit-quantity">Quantity (<span id="edit-unit"></span>)</label>
+        <input id="edit-quantity" class="input" type="number" min="0" step="any" inputmode="decimal">
+      </div>
+      <p id="edit-error" class="form-error" role="alert"></p>
+      <div class="modal-actions">
+        <button id="edit-cancel" class="btn btn-secondary" type="button">Cancel</button>
+        <button class="btn btn-primary" type="submit">Save</button>
+      </div>
+    </form>
+  </dialog>
+
   <nav id="bottom-nav"></nav>
 
   <script type="module" src="js/inventory.js"></script>

@@ -163,3 +163,23 @@ export function deleteShoppingItem(id) {
 export function getRecipes() {
   return read(KEYS.recipes);
 }
+
+function isValidRecipe(recipe) {
+  return (
+    recipe &&
+    typeof recipe.name === "string" &&
+    recipe.name.trim() !== "" &&
+    Array.isArray(recipe.ingredients) &&
+    recipe.ingredients.length > 0 &&
+    recipe.ingredients.every(isValidItem) &&
+    Array.isArray(recipe.instructions) &&
+    recipe.instructions.length > 0
+  );
+}
+
+export function addRecipe(recipe) {
+  if (!isValidRecipe(recipe)) throw new Error("Recipe needs a name, at least one ingredient, and at least one step.");
+  const newRecipe = { description: "", prepTime: 0, cookTime: 0, servings: 1, ...recipe, id: generateId("recipe") };
+  write(KEYS.recipes, [...getRecipes(), newRecipe]);
+  return newRecipe;
+}

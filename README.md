@@ -74,7 +74,7 @@ import { getInventory, addShoppingItem } from "./storage.js";
 | `addInventoryItem(item)` / `updateInventoryItem(id, changes)` / `deleteInventoryItem(id)` | Inventory CRUD |
 | `getShoppingList()` / `saveShoppingList(list)` | Read / overwrite shopping list |
 | `addShoppingItem(item)` / `updateShoppingItem(id, changes)` / `deleteShoppingItem(id)` | Shopping CRUD |
-| `getRecipes()` | Read recipes |
+| `getRecipes()` / `addRecipe(recipe)` | Read recipes / add a new recipe |
 | `isLowStock(item)` | `true` if quantity ≤ lowStockThreshold |
 | `toBaseUnit(quantity, unit)` | Converts to g / mL / pcs for comparisons |
 | `LOCATIONS`, `UNITS` | Allowed storage locations and units for dropdowns |
@@ -102,9 +102,9 @@ import { getInventory, addShoppingItem } from "./storage.js";
 
 ## Current status
 
-**Working now:** navigation between all three pages, sample data, inventory search, low-stock badges, shopping checkboxes (saved), low-stock suggestions, recipe search, ingredient availability count.
+**Working now:** navigation between all three pages, sample data, inventory search, editing an item's quantity (tap a row), shopping checkboxes (saved), low-stock suggestions, recipe search, ingredient availability count, adding a recipe.
 
 **To build:**
-- Dev 1 — add / edit / delete inventory items, location filters, expiration warnings
+- Dev 1 — add / delete inventory items, editing fields other than quantity, location filters, expiration warnings
 - Dev 2 — add / remove shopping items, add suggestions to list, move purchased items to inventory
 - Dev 3 — recipe detail view, missing-ingredient list, add missing ingredients to shopping list
