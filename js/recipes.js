@@ -1,7 +1,7 @@
 // Recipes page — owned by Developer 3.
-import { initStorage, getRecipes, getInventory, toBaseUnit } from "./storage.js";
+import { initStorage, getRecipes, addRecipe, getInventory, toBaseUnit, UNITS } from "./storage.js";
 import { renderNav } from "./navigation.js";
-import { escapeHtml } from "./ui.js";
+import { escapeHtml, showToast } from "./ui.js";
 
 const listEl = document.getElementById("recipe-list");
 const searchEl = document.getElementById("recipe-search");
@@ -48,6 +48,72 @@ function renderList() {
 }
 
 searchEl.addEventListener("input", renderList);
+
+// ---------- Add recipe ----------
+
+const dialogEl = document.getElementById("recipe-dialog");
+const formEl = document.getElementById("recipe-form");
+const errorEl = document.getElementById("recipe-error");
+const unitCodes = UNITS.map((u) => u.code);
+
+function lines(id) {
+  return document.getElementById(id).value.split("\n").map((l) => l.trim()).filter(Boolean);
+}
+
+// Turns "200 g Flour" into { quantity: 200, unit: "g", name: "Flour" }, or null if it doesn't match.
+function parseIngredient(line) {
+  const match = line.match(/^(\d*\.?\d+)\s+(\S+)\s+(.+)$/);
+  if (!match) return null;
+  const unit = unitCodes.find((code) => code.toLowerCase() === match[2].toLowerCase());
+  return unit ? { quantity: Number(match[1]), unit, name: match[3] } : null;
+}
+
+document.getElementById("add-recipe-btn").addEventListener("click", () => {
+  formEl.reset();
+  errorEl.textContent = "";
+  dialogEl.showModal();
+});
+
+document.getElementById("recipe-cancel").addEventListener("click", () => dialogEl.close());
+
+formEl.addEventListener("submit", (e) => {
+  e.preventDefault();
+  const name = document.getElementById("recipe-name").value.trim();
+  const ingredientLines = lines("recipe-ingredients");
+  const instructions = lines("recipe-instructions");
+
+  if (!name) return (errorEl.textContent = "Enter a recipe name.");
+  if (ingredientLines.length === 0) return (errorEl.textContent = "Add at least one ingredient.");
+
+  const ingredients = [];
+  for (const [i, line] of ingredientLines.entries()) {
+    const ingredient = parseIngredient(line);
+    if (!ingredient) {
+      errorEl.textContent = `Ingredient line ${i + 1} should look like "200 g Flour". Units: ${unitCodes.join(", ")}.`;
+      return;
+    }
+    ingredients.push(ingredient);
+  }
+
+  if (instructions.length === 0) return (errorEl.textContent = "Add at least one step.");
+
+  try {
+    const recipe = addRecipe({
+      name,
+      description: document.getElementById("recipe-description").value.trim(),
+      prepTime: Number(document.getElementById("recipe-prep").value) || 0,
+      cookTime: Number(document.getElementById("recipe-cook").value) || 0,
+      servings: Number(document.getElementById("recipe-servings").value) || 1,
+      ingredients,
+      instructions,
+    });
+    dialogEl.close();
+    renderList();
+    showToast(`${recipe.name} added`);
+  } catch (err) {
+    errorEl.textContent = err.message;
+  }
+});
 
 initStorage();
 renderNav();

@@ -1,5 +1,5 @@
 // Inventory (home) page — owned by Developer 1.
-import { initStorage, getInventory, isLowStock } from "./storage.js";
+import { initStorage, getInventory, updateInventoryItem } from "./storage.js";
 import { renderNav } from "./navigation.js";
 import { escapeHtml, showToast } from "./ui.js";
 
@@ -27,24 +27,63 @@ function renderList() {
   listEl.innerHTML = items
     .map(
       (item) => `
-      <li class="inventory-row">
-        <svg class="inventory-icon" viewBox="0 0 24 24" role="img" aria-label="${escapeHtml(item.location)}">
-          ${LOCATION_ICONS[item.location] ?? LOCATION_ICONS.Other}
-        </svg>
-        <div class="inventory-info">
-          <span class="inventory-name">${escapeHtml(item.name)}</span>
-          <span class="text-muted">${escapeHtml(item.location)}${item.isShared ? "" : " · Personal"}</span>
-        </div>
-        <div class="inventory-qty">
-          <span>${item.quantity} ${escapeHtml(item.unit)}</span>
-          ${isLowStock(item) ? `<span class="badge badge-warning">Low</span>` : ""}
-        </div>
+      <li>
+        <button class="inventory-row" type="button" data-id="${item.id}" aria-label="Edit ${escapeHtml(item.name)}, ${item.quantity} ${escapeHtml(item.unit)}">
+          <svg class="inventory-icon" viewBox="0 0 24 24" aria-hidden="true">
+            ${LOCATION_ICONS[item.location] ?? LOCATION_ICONS.Other}
+          </svg>
+          <span class="inventory-info">
+            <span class="inventory-name">${escapeHtml(item.name)}</span>
+            <span class="text-muted">${escapeHtml(item.location)}${item.isShared ? "" : " · Personal"}</span>
+          </span>
+          <span class="inventory-qty">
+            <span>${item.quantity} ${escapeHtml(item.unit)}</span>
+          </span>
+        </button>
       </li>`
     )
     .join("");
 }
 
 searchEl.addEventListener("input", renderList);
+
+// ---------- Edit quantity ----------
+
+const dialogEl = document.getElementById("edit-dialog");
+const formEl = document.getElementById("edit-form");
+const quantityEl = document.getElementById("edit-quantity");
+const errorEl = document.getElementById("edit-error");
+let editingId = null;
+
+listEl.addEventListener("click", (e) => {
+  const row = e.target.closest(".inventory-row");
+  if (!row) return;
+  const item = getInventory().find((i) => i.id === row.dataset.id);
+  if (!item) return;
+
+  editingId = item.id;
+  document.getElementById("edit-title").textContent = `Edit ${item.name}`;
+  document.getElementById("edit-unit").textContent = item.unit;
+  quantityEl.value = item.quantity;
+  errorEl.textContent = "";
+  dialogEl.showModal();
+  quantityEl.select();
+});
+
+formEl.addEventListener("submit", (e) => {
+  e.preventDefault();
+  const quantity = Number(quantityEl.value);
+  if (quantityEl.value.trim() === "" || !Number.isFinite(quantity) || quantity < 0) {
+    errorEl.textContent = "Enter a quantity of 0 or more.";
+    return;
+  }
+  const updated = updateInventoryItem(editingId, { quantity });
+  dialogEl.close();
+  renderList();
+  if (updated) showToast(`${updated.name} updated to ${updated.quantity} ${updated.unit}`);
+});
+
+document.getElementById("edit-cancel").addEventListener("click", () => dialogEl.close());
 
 // TODO (Developer 1): open an add/edit form and call addInventoryItem / updateInventoryItem.
 document.getElementById("add-item-btn").addEventListener("click", () => {
